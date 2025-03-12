@@ -27,6 +27,10 @@ class CharacterController extends Controller
         return view('characters.create', compact('character'));
     }
 
+    public function edit(Character $character) {
+        return view('characters.edit', compact('character'));
+    }
+
     public function update(CharacterStoreRequest$request, Character $character) {
         $data = $request->validated();
         $character->update($data);
