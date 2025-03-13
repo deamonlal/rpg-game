@@ -2,19 +2,19 @@
 
 @section('content')
     <div class="battle-container">
-        <h1>Вы встретили <span id="enemy-name">{{$enemy->name}}</span></h1>
+        <h1>Вы встретили <span id="enemy-name">{{$enemy['name']}}</span></h1>
 
         <div class="battle-info">
             <div class="character-box hero">
-                <h2>{{$character->name}}</h2>
-                <p>❤️ Очки здоровья: <span id="hero-health">{{$character->health}}</span></p>
-                <p>⚔️ Сила удара: <span id="hero-damage">1</span> (Уровень {{ $character->level }})</p>
+                <h2>{{$character['name']}}</h2>
+                <p>❤️ Очки здоровья: <span id="hero-health">{{$character['health']}}</span></p>
+                <p>⚔️ Сила удара: <span id="hero-damage">1</span> (Уровень {{ $character['level'] }})</p>
             </div>
 
             <div class="character-box enemy">
-                <h2>{{$enemy->name}}</h2>
-                <p>❤️ Очки здоровья: <span id="enemy-health">{{$enemy->health}}</span></p>
-                <p>⚔️ Сила удара: <span id="enemy-damage">{{ $enemy->damage }}</span> (Уровень {{ $enemy->level }})</p>
+                <h2>{{$enemy['name']}}</h2>
+                <p>❤️ Очки здоровья: <span id="enemy-health">{{$enemy['health']}}</span></p>
+                <p>⚔️ Сила удара: <span id="enemy-damage">{{ $enemy['damage'] }}</span> (Уровень {{ $enemy['level'] }})</p>
             </div>
         </div>
 
@@ -34,16 +34,16 @@
 
 @push('scripts')
     <script>
-        let heroLevel = {{ $character->level }};
-        let heroHealth = {{ $character->health }};
+        let heroLevel = {{ $character['level'] }};
+        let heroHealth = {{ $character['health'] }};
         let heroDamage = 1;
-        let heroExp = {{ $character->exp }};
-        let heroGold = {{ $character->gold }};
-        let heroInventory = '{{ $character->inventory ?? json_encode([]) }}';
-        let enemyLevel = {{ $enemy->level }};
-        let enemyHealth = {{ $enemy->health }};
-        let enemyDamage = {{ $enemy->damage }};
-        let enemyItems = '{{ $enemy->items ?? json_encode([]) }}';
+        let heroExp = {{ $character['exp'] }};
+        let heroGold = {{ $character['gold'] }};
+        let heroInventory = JSON.parse('{{ $character['inventory'] ?? '{}' }}'.replace(/&quot;/g,'"'));
+        let enemyLevel = {{ $enemy['level'] }};
+        let enemyHealth = {{ $enemy['health'] }};
+        let enemyDamage = {{ $enemy['damage'] }};
+        let enemyItems = JSON.parse('{{ $enemy['items'] ?? json_encode([]) }}'.replace(/&quot;/g,'"'));
 
         document.getElementById("attack-btn").addEventListener("click", attackMonster);
         document.getElementById("run-btn").addEventListener("click", tryToRun);
@@ -61,7 +61,7 @@
             let levelRatio = heroLevel / enemyLevel;
 
             if (levelRatio >= 1 || Math.random() < levelRatio) {
-                window.location.href = "/game?character_id={{$character->id}}";
+                window.location.href = "/game?character_id={{$character['id']}}";
                 return;
             }
 
@@ -79,39 +79,44 @@
                 document.getElementById("run-btn").style.display = "none";
 
                 let items = checkEnemyItems();
-                heroInventory = items;
 
-                {{--fetch('/item/collect', {--}}
-                {{--    method: 'POST',--}}
-                {{--    headers: {--}}
-                {{--        'Content-Type': 'application/json',--}}
-                {{--        'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
-                {{--    },--}}
-                {{--    body: JSON.stringify({ item: item })--}}
-                {{--});--}}
+                Object.entries(items).forEach(([key, value]) => {
+                    // Если предмет уже есть в инвентаре, увеличиваем его количество
+                    if (heroInventory[key]) {
+                        heroInventory[key] += value;
+                    } else {
+                        // Если предмета нет, добавляем его с количеством value
+                        heroInventory[key] = value;
+                    }
+                });
 
-                fetch("/characters/{{ $character->id }}", {
+                fetch("/characters/{{ $character['id'] }}", {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: JSON.stringify({
-                        'name': '{{ $character->name }}',
+                        'name': '{{ $character['name'] }}',
                         'level': heroLevel,
                         'exp': heroExp,
                         'gold': heroGold,
                         'health': heroHealth,
-                        'inventory': heroInventory,
-                        'skills': '{{ $character->skills ?? json_encode([]) }}'
+                        'inventory': JSON.stringify(heroInventory),
+                        'skills': '{{ $character['skills'] ?? json_encode([]) }}'
                     })
                 })
 
                 if (Object.keys(items).length > 0) {
+                    // Преобразуем объект items в строку для отображения
+                    const itemList = Object.entries(items)
+                        .map(([key, value]) => `<b>${key}</b>`)
+                        .join(", "); // Соединяем элементы через запятую
+
                     document.getElementById("result").innerHTML = `
-                    <p>Вы получили предметы: <b>${items}</b>!</p>
-                    <button onclick="window.location.href='/game?character_id={{$character->id}}'" class="btn btn-success">🏠 Вернуться назад</button>
-                    `;
+        <p>Вы получили предметы: ${itemList}!</p>
+        <button onclick="window.location.href='/game?character_id={{$character['id']}}'" class="btn btn-success">🏠 Вернуться назад</button>
+    `;
                 }
 
                 return true;
@@ -130,7 +135,7 @@
                 document.getElementById("run-btn").style.display = "none";
                 document.getElementById("result").innerHTML = `<p>Ваш персонаж удален.</p>`;
 
-                fetch('/characters/1', {
+                fetch('{{ route('characters.destroy', $character['id']) }}', {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 }).then(() => setTimeout(() => window.location.href = "/", 2000));
@@ -140,19 +145,19 @@
         }
 
         function checkEnemyItems() {
-            let items = [];
-            for (const [item, chance] of '{{ json_encode($enemy->items, true) }}') {
+            let items = {};
+            Object.entries(enemyItems).forEach(([key, chance]) => {
                 const random = Math.floor(Math.random() * 100) + 1;
-                console.log("chance: " + chance);
-                console.log("random: " + random);
                 if (random <= chance) {
-                    if (item in heroInventory)
-                        items[item] += 1;
-                    else
-                        items[item] = 1;
+                    if (key in heroInventory) {
+                        items[key] = (items[key] || 0) + 1;
+                    } else {
+                        items[key] = 1;
+                    }
                 }
-            }
-            return JSON.stringify(items);
+            });
+
+            return items;
         }
     </script>
 @endpush

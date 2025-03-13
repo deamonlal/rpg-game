@@ -24,8 +24,8 @@ class GameController extends Controller
 
     public function fight(FightRequest $request) {
         $data = $request->validated();
-        $character = Character::find(['id' => $data['character_id']])[0];
-        $enemy = Enemy::where('tier', $data['location_tier'])->inRandomOrder()->first();
+        $character = Character::find(['id' => $data['character_id']])[0]->toArray();
+        $enemy = Enemy::where('tier', $data['location_tier'])->inRandomOrder()->first()->toArray();
         return view('fight', ['enemy' => $enemy, 'character' => $character]);
     }
 
