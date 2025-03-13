@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FightRequest;
 use App\Http\Requests\GameIndexRequest;
 use App\Models\Character;
+use App\Models\Enemy;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -20,14 +22,10 @@ class GameController extends Controller
         $data = $request->validated();
     }
 
-    public function fight() {
-        $character = Character::find(['id' => 1]);
-        $enemy = [
-            'name' => 'Павук',
-            'level' => 1,
-            'damage' => 1,
-            'health' => 3,
-        ];
+    public function fight(FightRequest $request) {
+        $data = $request->validated();
+        $character = Character::find(['id' => $data['character_id']])[0];
+        $enemy = Enemy::where('tier', $data['location_tier'])->inRandomOrder()->first();
         return view('fight', ['enemy' => $enemy, 'character' => $character]);
     }
 

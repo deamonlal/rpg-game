@@ -19,5 +19,6 @@ class Enemy extends Model
         'health',
         'item',
         'skills',
+        'tier'
     ];
 }

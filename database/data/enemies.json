@@ -1,0 +1,5 @@
+[
+    {"name":"Паук","level":1,"damage":1,"exp_gain":2,"gold_gain":1,"health":3,"items":{"паутина": 80, "лапка паука": 55, "сломанный меч": 4},"skills":null,"tier":"1"},
+    {"name":"Скелет","level":1,"damage":2,"exp_gain":3,"gold_gain":1,"health":2,"items":{"кость": 80, "череп": 11, "порванная рубаха":  3},"skills":null,"tier":"1"},
+    {"name":"Слизь","level":1,"damage":1,"exp_gain":1,"gold_gain":2,"health":2,"items":{"золотая монета": 4, "слизь": 80, "палка": 9},"skills":null,"tier":"1"}
+]

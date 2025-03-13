@@ -3,10 +3,10 @@
 @section('content')
     <div class="character-info">
         <h1>------</h1>
-        <p>Персонаж: <strong>{{ $character->name }}</strong> (Уровень <strong>{{ $character->level }}</strong>)</p>
+        <p>Персонаж: <strong>{{ $character->name }}</strong> (Уровень <strong>{{ $character->level }}</strong>) {{ $character->health }} очков здоровья</p>
 
         <div class="actions">
-            <a href="/fight" class="btn">Отправиться на поиски монстра</a>
+            <a href="/fight?location_tier=1&character_id={{ $character->id }}" class="btn">Отправиться на поиски монстра</a>
             <a href="/inventory" class="btn btn-secondary">Найти торговца</a>
         </div>
 

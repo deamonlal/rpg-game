@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('health');
+            $table->integer('level');
             $table->integer('damage');
             $table->integer('exp_gain');
             $table->integer('gold_gain');
-            $table->string('item');
+            $table->json('items')->nullable();
             $table->json('skills')->nullable();
             $table->integer('tier');
             $table->timestamps();

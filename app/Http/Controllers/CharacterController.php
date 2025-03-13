@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CharacterStoreRequest;
 use App\Models\Character;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CharacterController extends Controller
 {
@@ -31,9 +33,11 @@ class CharacterController extends Controller
         return view('characters.edit', compact('character'));
     }
 
-    public function update(CharacterStoreRequest$request, Character $character) {
+    public function update(CharacterStoreRequest $request, Character $character) {
         $data = $request->validated();
         $character->update($data);
+        $character->save();
+        return json_encode(['status' => 'success']);
     }
 
     public function destroy(Character $character) {
