@@ -11,10 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('traders', function (Blueprint $table) {
+        Schema::create('enemies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->json('items');
+            $table->integer('health');
+            $table->integer('damage');
+            $table->integer('exp_gain');
+            $table->integer('gold_gain');
+            $table->string('item');
+            $table->json('skills')->nullable();
             $table->integer('tier');
             $table->timestamps();
         });
@@ -25,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('traders');
+        Schema::dropIfExists('enemies');
     }
 };

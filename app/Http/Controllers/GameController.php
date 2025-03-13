@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GameIndexRequest;
 use App\Models\Character;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function index()
+    public function index(GameIndexRequest $request)
     {
-        $character = Character::firstOrCreate([
-            'name' => 'Герой',
-            'level' => '1',
-            'exp' => '0',
-            'gold' => '0',
-            'health' => '10',
-            'inventory' => json_encode([]),
-            'skills' => json_encode([]),
-        ]);
+        $data = $request->validated();
+        $character = Character::find($data['character_id']);
 
         return view('game', compact('character'));
     }
@@ -27,7 +21,7 @@ class GameController extends Controller
     }
 
     public function fight() {
-        $character = Character::find(['id' => 1])->toArray()[0];
+        $character = Character::find(['id' => 1]);
         $enemy = [
             'name' => 'Павук',
             'level' => 1,

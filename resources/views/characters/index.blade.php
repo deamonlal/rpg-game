@@ -4,11 +4,17 @@
     <div class="container">
         <h1 class="text-center mb-4">Список персонажей</h1>
 
-        <div class="row">
+        <!-- Кнопка создания персонажа -->
+        <div class="text-center mb-4 character-create">
+            <a href="/characters/create" class="btn btn-success btn-lg">➕ Создать персонажа</a>
+        </div>
+
+        <!-- Контейнер карточек -->
+        <div class="characters-container">
             @foreach ($characters as $character)
-                <div class="col-md-4 mb-4">
-                    <!-- Сделаем карточку кликабельной, добавив ссылку -->
-                    <a href="/characters/{{ $character->id }}/edit" class="character-card-link">
+                <div class="character-card-wrapper">
+                    <!-- Кликабельная карточка -->
+                    <a href="/game?character_id={{ $character->id }}" class="character-card-link">
                         <div class="character-card p-4">
                             <div class="character-header">
                                 <h3>{{ $character->name }}</h3>
@@ -29,49 +35,82 @@
 
                                 <h5 class="text-primary">🎒 Инвентарь:</h5>
                                 <ul class="list-group mb-3">
-                                    @foreach (json_decode($character->inventory, true) as $item)
+                                    @foreach (json_decode($character->inventory ?? "{}", true) as $item)
                                         <li class="list-group-item">{{ $item }}</li>
                                     @endforeach
                                 </ul>
 
                                 <h5 class="text-success">⚡ Способности:</h5>
                                 <ul class="list-group">
-                                    @foreach (json_decode($character->skills, true) as $skill)
+                                    @foreach (json_decode($character->skills ?? "{}", true) as $skill)
                                         <li class="list-group-item">{{ $skill }}</li>
                                     @endforeach
                                 </ul>
                             </div>
                         </div>
                     </a>
+
+                    <!-- Кнопка удаления персонажа -->
+                    <form action="{{ route('characters.destroy', $character->id) }}" method="POST" class="delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-delete" onclick="return confirmDelete()">
+                            ❌ Удалить
+                        </button>
+                    </form>
                 </div>
             @endforeach
         </div>
     </div>
 
+    <script>
+        function confirmDelete() {
+            return confirm("Вы уверены, что хотите удалить этого персонажа? Это действие нельзя отменить!");
+        }
+    </script>
+
     <style>
-        /* Убираем подчеркивание у ссылок */
+        /* Контейнер карточек - делает их в одну линию */
+        .characters-container {
+            margin-left: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Отступы между карточками */
+            justify-content: flex-start; /* Центрируем карточки */
+        }
+
+        /* Обертка карточки и кнопки */
+        .character-card-wrapper {
+            flex: 1 1 400px; /* Минимальный размер 300px, равномерное распределение */
+            max-width: 400px; /* Максимальная ширина */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .character-card-link {
             text-decoration: none;
             display: block;
+            width: 100%;
         }
 
         .character-card {
-            background: #ffffff; /* Белый фон */
-            border: 2px solid #007bff; /* Синяя рамка */
-            border-radius: 15px; /* Закругленные углы */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Тень */
-            transition: transform 0.3s, box-shadow 0.3s ease; /* Плавные переходы */
-            cursor: pointer; /* Указатель мыши изменится на "руку" */
-            overflow: hidden; /* Скрываем излишки */
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
         }
 
         .character-card:hover {
-            transform: translateY(-10px); /* Легкий подъем при наведении */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
 
         .character-header {
-            background: #007bff; /* Синяя зона заголовка */
+            background: #007bff;
             color: white;
             padding: 15px;
             border-radius: 15px 15px 0 0;
@@ -86,6 +125,10 @@
 
         .character-body p {
             margin-bottom: 10px;
+        }
+
+        .character-create {
+            margin-bottom: 25px;
         }
 
         .list-group-item {
@@ -108,14 +151,41 @@
             color: #28a745;
         }
 
-        /* Уменьшаем карточки для мобильных */
+        .btn-success {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Кнопка удаления */
+        .btn-delete {
+            margin-top: 10px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Для мобильных уменьшаем размер карточек */
         @media (max-width: 768px) {
-            .character-card {
-                max-width: 100%;
+            .characters-container {
+                justify-content: center;
             }
 
-            .character-header h3 {
-                font-size: 1.2rem;
+            .character-card-wrapper {
+                flex: 1 1 100%;
             }
         }
     </style>

@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\InventoryController;
 
-Route::get('/', [GameController::class, 'index'])->name('game');
+
+Route::get('/', [CharacterController::class, 'index']);
+Route::get('/game', [GameController::class, 'index']);
 Route::get('/fight', [GameController::class, 'fight']);
 Route::get('/punch', [GameController::class, 'punch']);
 Route::get('/leaveFight', [GameController::class, 'leaveFight']);

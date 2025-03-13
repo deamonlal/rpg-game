@@ -23,10 +23,10 @@ class CharacterStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'level' => 'required|integer',
-            'exp' => 'required|integer',
-            'gold' => 'required|integer',
-            'health' => 'required|integer',
+            'level' => 'required|integer|min:1',
+            'exp' => 'required|integer|min:0',
+            'gold' => 'required|integer|min:0',
+            'health' => 'required|integer|min:1',
             'inventory' => 'json',
             'skills' => 'json',
         ];
@@ -37,12 +37,16 @@ class CharacterStoreRequest extends FormRequest
         return [
             'name.required' => 'Это поле необходимо заполнить',
             'name.string' => 'Это поле должно быть строкой',
-            'surname.required' => 'Это поле необходимо заполнить',
-            'surname.string' => 'Это поле должно быть строкой',
-            'email.required' => 'Это поле необходимо заполнить',
-            'email.email' => 'Это поле должно быть типа email',
-            'age.integer' => 'Это поле должно быть целочисленного типа',
-            'description.string' => 'Это поле должно быть строкой',
+            'level.required' => 'Это поле необходимо заполнить',
+            'level.string' => 'Это поле должно быть строкой',
+            'exp.required' => 'Это поле необходимо заполнить',
+            'exp.integer' => 'Это поле должно быть целочисленного типа',
+            'gold.required' => 'Это поле необходимо заполнить',
+            'gold.integer' => 'Это поле должно быть типа целочисленного типа',
+            'health.required' => 'Это поле необходимо заполнить',
+            'health.integer' => 'Это поле должно быть типа целочисленного типа',
+            'inventory.json' => 'Это поле должно быть типа json',
+            'skills.json' => 'Это поле должно быть типа json',
         ];
     }
 }
