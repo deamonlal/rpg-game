@@ -1,3 +1,11 @@
 [
-    {"name": "", "type": "", "cost": "", "tier": "1"}
+    {"name": "паутина", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "лапка паука", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "сломанный меч", "type": "weapon", "cost": "2", "tier": "1"},
+    {"name": "кость", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "череп", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "порванная рубаха", "type": "armor", "cost": "2", "tier": "1"},
+    {"name": "золотая монета", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "слизь", "type": "item", "cost": "1", "tier": "1"},
+    {"name": "палка", "type": "weapon", "cost": "1", "tier": "1"}
 ]

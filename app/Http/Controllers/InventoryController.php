@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InventoryIndexRequest;
+use App\Models\Character;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    public function index()
+    public function index(InventoryIndexRequest $request)
     {
-        $character = Inventory::find($data['character_id']);
+        $data = $request->validated();
+        $inventoryJson = Character::find($data['character_id'])->inventory;
+        $items = json_decode($inventoryJson, true);
 
-        return view('game', compact('character'));
+        return view('inventories.index', compact('items'));
     }
 }

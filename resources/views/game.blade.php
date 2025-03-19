@@ -12,7 +12,7 @@
 
         <!-- Кнопка для перехода в инвентарь -->
         <div class="inventory-btn">
-            <a href="/inventory" class="btn btn-primary">📦 Инвентарь</a>
+            <a href="/inventory?character_id={{ $character->id }}" class="btn btn-primary">📦 Инвентарь</a>
         </div>
 
         <!-- Новая кнопка выбора другого персонажа -->

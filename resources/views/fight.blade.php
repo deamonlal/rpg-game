@@ -107,17 +107,18 @@
                     })
                 })
 
+                let itemString = ``;
+
                 if (Object.keys(items).length > 0) {
                     // Преобразуем объект items в строку для отображения
                     const itemList = Object.entries(items)
                         .map(([key, value]) => `<b>${key}</b>`)
                         .join(", "); // Соединяем элементы через запятую
 
-                    document.getElementById("result").innerHTML = `
-        <p>Вы получили предметы: ${itemList}!</p>
-        <button onclick="window.location.href='/game?character_id={{$character['id']}}'" class="btn btn-success">🏠 Вернуться назад</button>
-    `;
+                    itemString = `<p>Вы получили предметы: ${itemList}!</p>`;
                 }
+
+                document.getElementById("result").innerHTML = itemString + `<button onclick="window.location.href='/game?character_id={{$character['id']}}'" class="btn btn-success">🏠 Вернуться назад</button>`;
 
                 return true;
             }
