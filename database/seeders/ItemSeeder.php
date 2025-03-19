@@ -32,7 +32,8 @@ class ItemSeeder extends Seeder
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'type' => $data['type'],
-                'tier_id' => $tier->id
+                'tier_id' => $tier->id,
+                'price' => $data['price'],
             ]);
 
             if ($data['type'] === 'weapon') {

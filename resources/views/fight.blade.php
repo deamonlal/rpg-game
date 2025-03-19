@@ -41,6 +41,7 @@
         let heroGold = {{ $character['gold'] }};
         let heroInventory = JSON.parse('{{ $character['inventory'] ?? '{}' }}'.replace(/&quot;/g,'"'));
         let enemyLevel = {{ $enemy['level'] }};
+        let enemyExpGain = {{ $enemy['exp_gain'] }};
         let enemyHealth = {{ $enemy['health'] }};
         let enemyDamage = {{ $enemy['damage'] }};
         let enemyItems = JSON.parse('{{ $enemy['items'] ?? json_encode([]) }}'.replace(/&quot;/g,'"'));
@@ -78,7 +79,10 @@
                 document.getElementById("attack-btn").style.display = "none";
                 document.getElementById("run-btn").style.display = "none";
 
+                heroExp += enemyExpGain;
                 let items = checkEnemyItems();
+                checkHeroLevelUp()
+
 
                 Object.entries(items).forEach(([key, value]) => {
                     // Если предмет уже есть в инвентаре, увеличиваем его количество
@@ -159,6 +163,20 @@
             });
 
             return items;
+        }
+
+        function checkHeroLevelUp() {
+            // Сначала определяем, сколько опыта требуется для каждого уровня
+            const startExpLevel = 15;
+            let neededExp;
+            while (heroExp >= (neededExp = startExpLevel * Math.pow(1 + 0.2, heroLevel - 1))) {
+                // Если опыта достаточно для текущего уровня
+                alert('Вы получили новый уровень!');
+                heroExp -= neededExp; // Вычитаем опыт, потраченный на текущий уровень
+                heroLevel += 1; // Увеличиваем уровень
+                heroHealth *= 1.3; // Увеличиваем здоровье
+                heroDamage += 1; // Увеличиваем урон
+            }
         }
     </script>
 @endpush

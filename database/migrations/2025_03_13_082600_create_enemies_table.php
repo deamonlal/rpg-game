@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('level');
             $table->integer('damage');
             $table->integer('exp_gain');
-            $table->integer('gold_gain');
             $table->json('items')->nullable();
             $table->json('skills')->nullable();
             $table->integer('tier');

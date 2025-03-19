@@ -25,7 +25,6 @@ class EnemySeeder extends Seeder
                 "level" => $enemy["level"],
                 "damage" => $enemy["damage"],
                 "exp_gain" => $enemy["exp_gain"],
-                "gold_gain" => $enemy["gold_gain"],
                 "health" => $enemy["health"],
                 "items" => json_encode($enemy["items"]),
                 "skills" => json_encode($enemy["skills"]),

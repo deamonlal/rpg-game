@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('type'); // например: 'weapon', 'armor'
             $table->unsignedBigInteger('tier_id')->nullable();
+            $table->unsignedInteger('price');
             $table->timestamps();
 
             $table->foreign('tier_id')->references('id')->on('tiers')->onDelete('set null');
