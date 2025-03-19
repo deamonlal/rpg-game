@@ -24,6 +24,10 @@ class ItemSeeder extends Seeder
         foreach ($items as $data) {
             $tier = Tier::firstOrCreate(['tier' => $data['tier']]);
 
+            if (Item::where('name', $data['name'])->exists()) {
+                continue;
+            }
+
             $item = Item::create([
                 'name' => $data['name'],
                 'description' => $data['description'],

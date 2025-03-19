@@ -35,8 +35,8 @@
 
                                 <h5 class="text-primary">🎒 Инвентарь:</h5>
                                 <ul class="list-group mb-3">
-                                    @foreach (json_decode($character->inventory ?? "{}", true) as $item)
-                                        <li class="list-group-item">{{ $item }}</li>
+                                    @foreach (json_decode($character->inventory ?? "{}", true) as $item => $value)
+                                        <li class="list-group-item">{{ $item }} - {{ $value }} шт.</li>
                                     @endforeach
                                 </ul>
 

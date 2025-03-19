@@ -3,16 +3,22 @@
 @section('content')
     <div class="container">
         <h1 class="text-center mb-4">🎒 Инвентарь</h1>
+
+        <div class="text-center mt-4">
+            <a href="/game/?character_id={{ $characterId }}" class="btn btn-secondary">Назад</a>
+        </div>
+
         <div class="inventory-container">
             @foreach ($items ?? [] as $item)
                 <div class="inventory-card p-4">
                     <div class="inventory-header">
-                        <h3>{{ $item->name }}</h3>
+                        <h3>{{ $item['name'] }}</h3>
                     </div>
                     <div class="inventory-body">
-                        <p><strong>Тип:</strong> {{ $item->type }}</p>
-{{--                        <p><strong>Редкость:</strong> <span class="rarity {{ strtolower($item->tier) }}">{{ $item->rarity }}</span></p>--}}
-{{--                        <p><strong>Описание:</strong> {{ $item->description }}</p>--}}
+                        <p><strong>Тип:</strong> {{ $item['type'] }}</p>
+                        <p><strong>Редкость:</strong> <span class="rarity {{ strtolower($item['tier']['description']) }}">{{ $item['tier']['description'] }}</span></p>
+                        <p><strong>Описание:</strong> {{ $item['description'] }}</p>
+                        <p><strong>Количество:</strong> {{ $item['quantity'] }}</p>
                     </div>
                 </div>
             @endforeach
