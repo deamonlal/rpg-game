@@ -13,6 +13,7 @@ class InventoryController extends Controller
         $data = $request->validated();
         $inventoryJson = Character::find($data['character_id'])->inventory;
         $items = json_decode($inventoryJson, true);
+        var_dump($items);
 
         return view('inventories.index', compact('items'));
     }

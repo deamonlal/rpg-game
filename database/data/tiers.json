@@ -1,0 +1,12 @@
+[
+    {"tier": 1, "description": "Обычный"},
+    {"tier": 2, "description": "Необычный"},
+    {"tier": 3, "description": "Редкий"},
+    {"tier": 4, "description": "Мистический"},
+    {"tier": 5, "description": "Мифический"},
+    {"tier": 6, "description": "Легендарный"},
+    {"tier": 7, "description": "Божественный"},
+    {"tier": 8, "description": "Космический"},
+    {"tier": 9, "description": "Межпространственный"},
+    {"tier": 10, "description": "Абсолютный"}
+]

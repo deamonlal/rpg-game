@@ -3,7 +3,6 @@
 @section('content')
     <div class="container">
         <h1 class="text-center mb-4">🎒 Инвентарь</h1>
-
         <div class="inventory-container">
             @foreach ($items ?? [] as $item)
                 <div class="inventory-card p-4">
