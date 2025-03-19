@@ -7,48 +7,46 @@ use App\Http\Requests\TraderIndexRequest;
 use App\Http\Requests\TraderSellRequest;
 use App\Models\Character;
 use App\Models\Item;
+use App\Services\TraderService;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class TraderController extends Controller
 {
-    public const TRADER_MARKUP = 1.3;
-    public const TRADER_DISCONT = 0.75;
+    public function __construct(protected TraderService $traderService)
+    {}
 
-    public function index(TraderIndexRequest $request): Application|Factory|View
+    public function index(TraderIndexRequest $request): Factory|View|Application|RedirectResponse
     {
         $data = $request->validated();
-        $character = Character::find($data['character_id'])->toArray();
-        $traderItems = Item::inRandomOrder()->limit(5)->get()->toArray();
-        $charItems = json_decode($character['inventory'], true);
-        $charItemKeys = array_keys($charItems ?? []);
-        $characterItems = Item::whereIn('name', $charItemKeys)->get()->toArray();
+        $characterId = $data['character_id'];
 
-        return view('traders.index', compact('character', 'traderItems', 'characterItems'));
+        try {
+            $traderData = $this->traderService->getTraderData($characterId);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('error.page')->withErrors('Персонаж не найден.');
+        }
+
+        return view('traders.index', $traderData);
     }
 
     public function buy(TraderBuyRequest $request, Item $item): RedirectResponse
     {
         $data = $request->validated();
         $character = Character::find($data['character_id']);
-        $money = $character->gold;
-        $inventory = json_decode($character->inventory, true);
-        $cost = $item->price * self::TRADER_MARKUP;
 
-        if ($money >= $cost) {
-            $money -= $cost;
-            if (key_exists($item->name, $inventory)) {
-                $inventory += 1;
-            } else {
-                $inventory[$item->name] = 1;
-            }
-
-            $character->gold = $money;
-            $character->inventory = json_encode($inventory);
-            $character->save();
+        try {
+            $this->traderService->buyItem($character, $item);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('trader')->withErrors($e->getMessage());
         }
+
 
         return redirect()->route('trader');
     }
@@ -57,21 +55,13 @@ class TraderController extends Controller
     {
         $data = $request->validated();
         $character = Character::find($data['character_id']);
-        $money = $character->gold;
-        $inventory = json_decode($character->inventory, true);
-        $cost = $item->price * self::TRADER_DISCONT;
 
-        if (key_exists($item->name, $inventory)) {
-            $inventory[$item->name] -= 1;
-            if ($inventory[$item->name] < 1) {
-                unset($inventory[$item->name]);
-            }
-            $money += $cost;
+        try {
+            $this->traderService->sellItem($character, $item);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('trader')->withErrors($e->getMessage());
         }
-
-        $character->gold = $money;
-        $character->inventory = json_encode($inventory);
-        $character->save();
 
         return redirect()->route('trader');
     }

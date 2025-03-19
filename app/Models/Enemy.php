@@ -21,4 +21,15 @@ class Enemy extends Model
         'skills',
         'tier'
     ];
+
+    /**
+     * Получаем случайного врага для выбранной локации.
+     *
+     * @param int $locationTier
+     * @return Enemy|null
+     */
+    public static function getRandomByTier(int $locationTier): ?Enemy
+    {
+        return self::where('tier', $locationTier)->inRandomOrder()->first();
+    }
 }

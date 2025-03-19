@@ -3,40 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InventoryIndexRequest;
-use App\Models\Character;
-use App\Models\Item;
-use Illuminate\Http\Request;
+use App\Services\InventoryService;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class InventoryController extends Controller
 {
-    public function index(InventoryIndexRequest $request)
+    public function __construct(protected InventoryService $inventoryService)
+    {}
+
+    public function index(InventoryIndexRequest $request): Application|View|Factory|RedirectResponse
     {
         $data = $request->validated();
-        $inventoryJson = Character::find($data['character_id'])->inventory;
-        $items = json_decode($inventoryJson, true);
-        $itemKeys = array_keys($items);
-        $itemsWithDescription = Item::whereIn('name', $itemKeys)->with('tier')->get(['name', 'description', 'type', 'tier_id'])->toArray();
+        $characterId = $data['character_id'];
 
-        $typeMap = [
-            'armors' => 'Броня',
-            'weapons' => 'Оружие',
-            'alchemy' => 'Алхимия',
-            'items' => 'Предмет',
-            // Добавляйте новые типы предметов здесь
-        ];
-
-
-        foreach ($itemsWithDescription as &$item) {
-            // Используем тип из маппинга, если он есть
-            if (isset($typeMap[$item['type']])) {
-                $item['type'] = $typeMap[$item['type']];
-            }
-
-            if (isset($items[$item['name']])) {
-                $item['quantity'] = $items[$item['name']];
-            }
+        try {
+            $inventoryItems = $this->inventoryService->getInventoryItems($characterId);
+            $itemsWithDescription = $this->inventoryService->getItemsWithDescription(array_keys($inventoryItems));
+            $mappedItems = $this->inventoryService->mapItemsWithDescription($itemsWithDescription, $inventoryItems);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('error.page')->withErrors('Ошибка получения предметов!');
         }
 
-        return view('inventories.index', ['items' => $itemsWithDescription, 'characterId' => $data['character_id']]);
+        return view('inventories.index', [
+            'items' => $mappedItems,
+            'characterId' => $characterId
+        ]);
     }
 }

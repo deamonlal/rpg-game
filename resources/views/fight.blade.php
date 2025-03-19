@@ -83,7 +83,6 @@
                 let items = checkEnemyItems();
                 checkHeroLevelUp()
 
-
                 Object.entries(items).forEach(([key, value]) => {
                     // Если предмет уже есть в инвентаре, увеличиваем его количество
                     if (heroInventory[key]) {
@@ -93,6 +92,8 @@
                         heroInventory[key] = value;
                     }
                 });
+
+
 
                 fetch("/characters/{{ $character['id'] }}", {
                     method: 'PUT',

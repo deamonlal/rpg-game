@@ -22,4 +22,15 @@ class Character extends Model
     ];
 
     protected $guarded = false;
+
+    /**
+     * Получаем данные персонажа.
+     *
+     * @param int $characterId
+     * @return Character|null
+     */
+    public static function getById(int $characterId): ?Character
+    {
+        return self::find($characterId);
+    }
 }
