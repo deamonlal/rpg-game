@@ -10,7 +10,11 @@
 
         <div class="inventory-container">
             @foreach ($items ?? [] as $item)
-                <div class="inventory-card p-4">
+                <div class="inventory-card p-4 clickable-card"
+                     data-character-id="{{ $characterId }}"
+                     data-item-id="{{ $item['id'] }}"
+                     data-item-slot="{{ $item['slot'] ?? null }}">
+
                     <div class="inventory-header">
                         <h3>{{ $item['name'] }}</h3>
                     </div>
@@ -24,6 +28,41 @@
             @endforeach
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.clickable-card').forEach(card => {
+                card.addEventListener('click', function () {
+                    let characterId = this.getAttribute('data-character-id');
+                    let itemId = this.getAttribute('data-item-id');
+                    let slot = this.getAttribute('data-item-slot')
+
+                    fetch('/equipment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Защита от CSRF
+                        },
+                        body: JSON.stringify({
+                            character_id: characterId,
+                            item_id: itemId,
+                            slot: slot
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Предмет экипирован!');
+                                location.reload(); // Перезагрузка страницы для обновления инвентаря
+                            } else {
+                                alert('Ошибка: ' + data.message);
+                            }
+                        })
+                        .catch(error => console.error('Ошибка:', error));
+                });
+            });
+        });
+    </script>
 
     <style>
         .inventory-container {

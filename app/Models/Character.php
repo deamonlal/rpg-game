@@ -33,4 +33,8 @@ class Character extends Model
     {
         return self::find($characterId);
     }
+
+    public function equipment() {
+        return $this->hasMany(Equipment::class);
+    }
 }

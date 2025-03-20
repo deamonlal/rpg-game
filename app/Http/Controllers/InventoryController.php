@@ -23,7 +23,7 @@ class InventoryController extends Controller
 
         try {
             $inventoryItems = $this->inventoryService->getInventoryItems($characterId);
-            $itemsWithDescription = $this->inventoryService->getItemsWithDescription(array_keys($inventoryItems));
+            $itemsWithDescription = $this->inventoryService->getItemsCollection(array_keys($inventoryItems));
             $mappedItems = $this->inventoryService->mapItemsWithDescription($itemsWithDescription, $inventoryItems);
         } catch (Exception $e) {
             Log::error($e->getMessage());

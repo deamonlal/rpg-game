@@ -33,11 +33,11 @@ class InventoryService
      * @param array $itemNames
      * @return array
      */
-    public function getItemsWithDescription(array $itemNames): array
+    public function getItemsCollection(array $itemNames): array
     {
         return Item::whereIn('name', $itemNames)
-            ->with('tier')
-            ->get(['name', 'description', 'type', 'tier_id'])
+            ->with(['tier', 'armor', 'weapon'])
+            ->get()
             ->toArray();
     }
 
