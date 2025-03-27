@@ -36,13 +36,13 @@ class ItemSeeder extends Seeder
                 'price' => $data['price'],
             ]);
 
-            if ($data['type'] === 'weapon') {
+            if ($data['type'] === 'weapons') {
                 Weapon::create([
                     'item_id' => $item->id,
                     'damage' => $data['damage'],
                     'slot' => $data['slot'],
                 ]);
-            } elseif ($data['type'] === 'armor') {
+            } elseif ($data['type'] === 'armors') {
                 Armor::create([
                     'item_id' => $item->id,
                     'armor' => $data['armor'],

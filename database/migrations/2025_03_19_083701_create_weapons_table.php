@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->integer('damage');
+            $table->string('slot');
             $table->timestamps();
         });
     }

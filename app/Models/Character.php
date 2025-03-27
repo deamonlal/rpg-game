@@ -31,7 +31,7 @@ class Character extends Model
      */
     public static function getById(int $characterId): ?Character
     {
-        return self::find($characterId);
+        return self::with(['equipment.item.weapon', 'equipment.item.armor'])->find($characterId);
     }
 
     public function equipment() {

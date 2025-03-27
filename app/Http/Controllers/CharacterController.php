@@ -41,12 +41,12 @@ class CharacterController extends Controller
         return view('characters.edit', compact('character'));
     }
 
-    public function update(CharacterStoreRequest $request, Character $character): RedirectResponse
+    public function update(CharacterStoreRequest $request, Character $character): false|string
     {
         $data = $request->validated();
         $character->update($data);
         $character->save();
-        return redirect()->route('characters.index');
+        return json_encode(['status' => 'success']);
     }
 
     public function destroy(Character $character): RedirectResponse

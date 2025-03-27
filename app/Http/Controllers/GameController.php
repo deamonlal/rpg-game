@@ -6,6 +6,7 @@ use App\Http\Requests\FightRequest;
 use App\Http\Requests\GameIndexRequest;
 use App\Models\Character;
 use App\Models\Enemy;
+use App\Services\GameService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -14,6 +15,9 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
+    public function __construct(protected GameService $gameService)
+    {}
+
     public function index(GameIndexRequest $request): Factory|View|Application|RedirectResponse
     {
         $data = $request->validated();
@@ -40,6 +44,9 @@ class GameController extends Controller
         if (!$enemy) {
             return redirect()->route('error.page')->withErrors('Враг не найден.');
         }
+
+        $character->damage = $this->gameService->getDamage($character);
+        $character->armor = $this->gameService->getArmor($character);
 
         return view('fight', ['enemy' => $enemy, 'character' => $character]);
     }

@@ -36,7 +36,8 @@
     <script>
         let heroLevel = {{ $character['level'] }};
         let heroHealth = {{ $character['health'] }};
-        let heroDamage = 1;
+        let heroDamage = {{ $character['damage'] }};
+        let heroArmor = {{ $character['armor'] }};
         let heroExp = {{ $character['exp'] }};
         let heroGold = {{ $character['gold'] }};
         let heroInventory = JSON.parse('{{ $character['inventory'] ?? '{}' }}'.replace(/&quot;/g,'"'));
@@ -104,9 +105,9 @@
                     body: JSON.stringify({
                         'name': '{{ $character['name'] }}',
                         'level': heroLevel,
-                        'exp': heroExp,
-                        'gold': heroGold,
-                        'health': heroHealth,
+                        'exp': Math.round(heroExp),
+                        'gold': Math.ceil(heroGold),
+                        'health': Math.ceil(heroHealth),
                         'inventory': JSON.stringify(heroInventory),
                         'skills': '{{ $character['skills'] ?? json_encode([]) }}'
                     })
@@ -132,7 +133,9 @@
 
         function enemyPunch() {
             // Враг атакует
-            heroHealth -= enemyDamage;
+            let punch = enemyDamage - heroArmor;
+            punch = punch < 0 ? 0 : punch;
+            heroHealth -= punch;
             document.getElementById("hero-health").innerText = heroHealth;
 
             if (heroHealth <= 0) {

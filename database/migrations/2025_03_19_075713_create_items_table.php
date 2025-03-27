@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->index()->unique();
             $table->string('description')->nullable();
             $table->string('type'); // например: 'weapon', 'armor'
+            $table->boolean('is_equipped')->default(false);
             $table->unsignedBigInteger('tier_id')->nullable();
             $table->unsignedInteger('price');
             $table->timestamps();

@@ -32,7 +32,7 @@
     {"name": "железный кастет", "description": "Тяжелый металлический кастет.", "type": "weapons", "slot": "right_hand", "tier": 1, "damage": 3, "price": 18},
     {"name": "палка с гвоздем", "description": "Обычная палка с прибитым гвоздем.", "type": "weapons", "slot": "right_hand", "tier": 1, "damage": 4, "price": 10},
 
-    {"name": "порванная рубаха", "description": "Потрепанная временем рубаха, почти не защищает от ударов.", "type": "armors", "tier": 1, "armor": 1, "price": 5},
+    {"name": "порванная рубаха", "description": "Потрепанная временем рубаха, почти не защищает от ударов.", "type": "armors", "slot":"body", "tier": 1, "armor": 1, "price": 5},
     {"name": "дырявый щит", "description": "Щит с пробоинами, но все еще может защитить.", "type": "armors", "slot": "left_hand", "tier": 1, "armor": 2, "price": 20},
     {"name": "латная рукавица", "description": "Металлическая перчатка, защищает кисть.", "type": "armors", "slot": "arms", "tier": 1, "armor": 2, "price": 15},
 
@@ -42,7 +42,7 @@
     {"name": "пучок трав", "description": "Лечебные травы, используются в зельях.", "type": "alchemy", "tier": 1, "price": 10},
     {"name": "перо ворона", "description": "Черное перо, оставленное вороной.", "type": "alchemy", "tier": 1, "price": 3},
 
-    {"name": "гоблинья шкура", "description": "Шкура, покрытая грязью и сальными пятнами. Получена от убитого гоблина.", "type": "armors", "slot": "body", "tier": 1, "price": 4},
+    {"name": "гоблинья шкура", "description": "Шкура, покрытая грязью и сальными пятнами. Получена от убитого гоблина.", "type": "armors", "slot": "body", "armor": 2, "tier": 1, "price": 4},
     {"name": "деревянная палка", "description": "Простая деревянная палка, часто встречающаяся у гоблинов.", "type": "weapons", "slot": "right_hand", "tier": 1, "damage": 1, "price": 2},
     {"name": "монета", "description": "Обычная монета с чеканкой.", "type": "items", "tier": 1, "price": 1},
 
